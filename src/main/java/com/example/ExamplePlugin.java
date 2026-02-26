@@ -7,6 +7,7 @@ import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.SoundEffectID;
 import net.runelite.api.events.AnimationChanged;
+import net.runelite.api.events.GameTick;
 import net.runelite.api.events.SoundEffectPlayed;
 import net.runelite.api.events.AreaSoundEffectPlayed;
 import net.runelite.client.config.ConfigManager;
@@ -53,6 +54,9 @@ public class ExamplePlugin extends Plugin
 		teleporting = false;
 	}
 
+	// Flag to schedule the arrival effect
+	private boolean scheduleArrivalEffect = false;
+
 	@Subscribe
 	public void onAnimationChanged(AnimationChanged event)
 	{
@@ -66,20 +70,20 @@ public class ExamplePlugin extends Plugin
 		int animationId = player.getAnimation();
 
 		// ---- Arrival Detection ----
-		// Teleport finishes when animation becomes -1 (idle)
 		if (teleporting && animationId == -1)
 		{
 			teleporting = false;
 
-			// Replay cowbell arrival animation + splash
+			// Replay cowbell animation
 			player.setAnimation(config.cowbellAnimationId());
 
+			// Schedule graphic + sound for next tick
 			if (config.showTeleportGraphic())
 			{
-				player.setGraphic(config.cowbellGraphicId());
+				scheduleArrivalEffect = true;
 			}
 
-			log.debug("Played arrival milk splash");
+			log.debug("Scheduled arrival milk splash and sound");
 			return;
 		}
 
@@ -99,7 +103,7 @@ public class ExamplePlugin extends Plugin
 		// Replace animation
 		player.setAnimation(config.cowbellAnimationId());
 
-		// Play milk splash at start
+		// Show teleport graphic immediately at start
 		if (config.showTeleportGraphic())
 		{
 			player.setGraphic(config.cowbellGraphicId());
@@ -107,6 +111,27 @@ public class ExamplePlugin extends Plugin
 
 		log.debug("Replaced teleport animation {}", animationId);
 	}
+
+	@Subscribe
+	public void onGameTick(GameTick event)
+	{
+		if (!scheduleArrivalEffect)
+			return;
+
+		Player player = client.getLocalPlayer();
+		if (player == null)
+			return;
+
+		// Play cowbell graphic
+		player.setGraphic(config.cowbellGraphicId());
+
+		// Play cowbell arrival sound
+		client.playSoundEffect(11286);
+
+		scheduleArrivalEffect = false;
+		log.debug("Played cowbell graphic and sound on arrival tick");
+	}
+
 
 	private boolean shouldOverride(int animationId)
 	{
