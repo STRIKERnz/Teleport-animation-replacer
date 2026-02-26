@@ -7,30 +7,20 @@ import net.runelite.client.config.ConfigItem;
 @ConfigGroup("cowbell")
 public interface ExampleConfig extends Config
 {
-	@ConfigItem(
-		keyName = "enabled",
-		name = "Enable Cowbell Teleport",
-		description = "Replace teleport animations with cowbell amulet animation"
-	)
-	default boolean enabled()
-	{
-		return true;
-	}
 
 	@ConfigItem(
-		keyName = "overrideNormal",
-		name = "Override Normal Teleports",
-		description = "Replace normal spellbook teleport animations (home, varrock, lumbridge, etc.)"
-
+		keyName = "overrideNormalandJewellery",
+		name = "Normal Teleports and Jewellery",
+		description = "Replace normal spellbook teleport animations and Jewellery (varrock, lumbridge, etc.)"
 	)
-	default boolean overrideModern()
+	default boolean overrideNormal()
 	{
 		return true;
 	}
 
 	@ConfigItem(
 		keyName = "overrideAncient",
-		name = "Override Ancient Spellbook Teleports",
+		name = "Ancient Spellbook Teleports",
 		description = "Replace ancient spellbook teleport animations"
 	)
 	default boolean overrideAncient()
@@ -40,7 +30,7 @@ public interface ExampleConfig extends Config
 
 	@ConfigItem(
 		keyName = "overrideArceuus",
-		name = "Override Arceuus Teleports",
+		name = "Arceuus Teleports",
 		description = "Replace Arceuus spellbook teleport animations"
 	)
 	default boolean overrideArceuus()
@@ -50,27 +40,17 @@ public interface ExampleConfig extends Config
 
 	@ConfigItem(
 		keyName = "overrideLunar",
-		name = "Override Lunar Teleports",
+		name = "Lunar Teleports",
 		description = "Replace Lunar spellbook teleport animations"
 	)
 	default boolean overrideLunar()
 	{
 		return true;
 	}
-
-	@ConfigItem(
-		keyName = "overrideJewellery",
-		name = "Override Jewellery Teleports",
-		description = "Replace ring/amulet/jewellery teleport animations"
-	)
-	default boolean overrideJewellery()
-	{
-		return true;
-	}
-
+	
 	@ConfigItem(
 		keyName = "overrideTabs",
-		name = "Override Teleport Tabs",
+		name = "Teleport Tabs",
 		description = "Replace teleport tab animations"
 	)
 	default boolean overrideTabs()

@@ -4,23 +4,14 @@ import java.util.Set;
 
 public final class AnimationConstants
 {
-	// Cowbell amulet animation
 	public static final int COWBELL_TELEPORT = 13811;
-
-	// Shared standard + jewellery teleport animation
+	public static final int COWBELL_TELEPORT_GRAPHIC = 3603;
 	public static final int STANDARD_AND_JEWELLERY_TELEPORT = 714;
-
-	// Ancient spellbook
 	public static final int ANCIENT_TELEPORT = 1979;
-
-	// Arceuus spellbook
 	public static final int ARCEUUS_TELEPORT = 3865;
-
-	// Lunar spellbook
 	public static final int LUNAR_TELEPORT = 1816;
-
-	// Teleport tablets
 	public static final int TAB_TELEPORT = 4071;
+
 
 	private static final Set<Integer> ALL_TELEPORTS = Set.of(
 			STANDARD_AND_JEWELLERY_TELEPORT,
@@ -61,4 +52,5 @@ public final class AnimationConstants
 	{
 		return animationId == TAB_TELEPORT;
 	}
+
 }

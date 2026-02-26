@@ -2,7 +2,6 @@ package com.example;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
-import lombok.extern.slf4j.Slf4j;
 import net.runelite.api.Client;
 import net.runelite.api.Player;
 import net.runelite.api.SoundEffectID;
@@ -17,7 +16,6 @@ import net.runelite.client.plugins.PluginDescriptor;
 
 import java.util.Set;
 
-@Slf4j
 @PluginDescriptor(
 		name = "Cowbell Teleport",
 		description = "Replace teleport animations with the cowbell amulet teleport animation",
@@ -31,67 +29,53 @@ public class ExamplePlugin extends Plugin
 	@Inject
 	private ExampleConfig config;
 
-	// Simple flag to know when a teleport is in progress
 	private boolean teleporting = false;
 
 	private static final Set<Integer> TELEPORT_SOUND_IDS = Set.of(
 			SoundEffectID.TELEPORT_VWOOP,
-			197, // Ancient teleport group sound
+			197,
 			965
 	);
 
 	@Override
 	protected void startUp()
 	{
-		log.debug("Cowbell Teleport started");
 		teleporting = false;
 	}
 
 	@Override
 	protected void shutDown()
 	{
-		log.debug("Cowbell Teleport stopped");
 		teleporting = false;
 	}
 
-	// Flag to schedule the arrival effect
-	private boolean scheduleArrivalEffect = false;
+	private int arrivalSoundTicksRemaining = -1;
+
+	private static final int ARRIVAL_SOUND_DELAY_TICKS = 2;
 
 	@Subscribe
 	public void onAnimationChanged(AnimationChanged event)
 	{
-		if (!config.enabled())
-			return;
-
 		if (event.getActor() != client.getLocalPlayer())
 			return;
 
 		Player player = client.getLocalPlayer();
 		int animationId = player.getAnimation();
 
-		// ---- Arrival Detection ----
 		if (teleporting && animationId == -1)
 		{
 			teleporting = false;
 
-			// Replay cowbell animation
-			player.setAnimation(config.cowbellAnimationId());
+			player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
+			player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
 
-			// Schedule graphic + sound for next tick
-			if (config.showTeleportGraphic())
-			{
-				scheduleArrivalEffect = true;
-			}
-
-			log.debug("Scheduled arrival milk splash and sound");
+			arrivalSoundTicksRemaining = ARRIVAL_SOUND_DELAY_TICKS;
 			return;
 		}
 
-		// Prevent overriding our own animation
-		if (animationId == config.cowbellAnimationId())
+		if (animationId == AnimationConstants.COWBELL_TELEPORT)
 			return;
 
-		// ---- Teleport Start Detection ----
 		if (!AnimationConstants.isTeleportAnimation(animationId))
 			return;
 
@@ -100,42 +84,34 @@ public class ExamplePlugin extends Plugin
 
 		teleporting = true;
 
-		// Replace animation
-		player.setAnimation(config.cowbellAnimationId());
-
-		// Show teleport graphic immediately at start
-		if (config.showTeleportGraphic())
-		{
-			player.setGraphic(config.cowbellGraphicId());
-		}
-
-		log.debug("Replaced teleport animation {}", animationId);
+		player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
+		player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
 	}
 
 	@Subscribe
 	public void onGameTick(GameTick event)
 	{
-		if (!scheduleArrivalEffect)
-			return;
-
 		Player player = client.getLocalPlayer();
 		if (player == null)
 			return;
 
-		// Play cowbell graphic
-		player.setGraphic(config.cowbellGraphicId());
-
-		// Play cowbell arrival sound
-		client.playSoundEffect(11286);
-
-		scheduleArrivalEffect = false;
-		log.debug("Played cowbell graphic and sound on arrival tick");
+		if (arrivalSoundTicksRemaining >= 0)
+		{
+			if (arrivalSoundTicksRemaining == 0)
+			{
+				client.playSoundEffect(11286);
+				arrivalSoundTicksRemaining = -1;
+			}
+			else
+			{
+				arrivalSoundTicksRemaining--;
+			}
+		}
 	}
-
 
 	private boolean shouldOverride(int animationId)
 	{
-		if (AnimationConstants.isModernTeleport(animationId) && config.overrideModern())
+		if (AnimationConstants.isModernTeleport(animationId) && config.overrideNormal())
 			return true;
 
 		if (AnimationConstants.isAncientTeleport(animationId) && config.overrideAncient())
@@ -153,7 +129,7 @@ public class ExamplePlugin extends Plugin
 	@Subscribe
 	public void onSoundEffectPlayed(SoundEffectPlayed event)
 	{
-		if (!config.enabled() || !config.muteTeleportSound())
+		if (!config.muteTeleportSound())
 			return;
 
 		if (event.getSource() != client.getLocalPlayer())
@@ -162,20 +138,18 @@ public class ExamplePlugin extends Plugin
 		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
 		{
 			event.consume();
-			log.debug("Muted teleport sound {}", event.getSoundId());
 		}
 	}
 
 	@Subscribe
 	public void onAreaSoundEffectPlayed(AreaSoundEffectPlayed event)
 	{
-		if (!config.enabled() || !config.muteTeleportSound())
+		if (!config.muteTeleportSound())
 			return;
 
 		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
 		{
 			event.consume();
-			log.debug("Muted area teleport sound {}", event.getSoundId());
 		}
 	}
 
