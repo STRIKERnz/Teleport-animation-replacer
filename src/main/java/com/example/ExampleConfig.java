@@ -8,9 +8,10 @@ import net.runelite.client.config.ConfigItem;
 public interface ExampleConfig extends Config
 {
 	@ConfigItem(
-			keyName = "overrideAnimationType",
-			name = "Override With",
-			description = "Select which teleport animation to use when overriding teleports"
+		keyName = "overrideAnimationType",
+		name = "Override With",
+		description = "Select which teleport animation to use when overriding teleports",
+		position = 0
 	)
 	default TeleportAnimation teleportAnimation()
 	{
@@ -20,7 +21,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideNormalandJewellery",
 		name = "Normal Teleports and Jewellery",
-		description = "Replace normal spellbook teleport animations and Jewellery (varrock, lumbridge, etc.)"
+		description = "Replace normal spellbook teleport animations and Jewellery (varrock, lumbridge, etc.)",
+		position = 1
 	)
 	default boolean overrideNormal()
 	{
@@ -30,7 +32,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideAncient",
 		name = "Ancient Spellbook Teleports",
-		description = "Replace ancient spellbook teleport animations"
+		description = "Replace ancient spellbook teleport animations",
+		position = 2
 	)
 	default boolean overrideAncient()
 	{
@@ -40,7 +43,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideArceuus",
 		name = "Arceuus Teleports",
-		description = "Replace Arceuus spellbook teleport animations"
+		description = "Replace Arceuus spellbook teleport animations",
+		position = 3
 	)
 	default boolean overrideArceuus()
 	{
@@ -50,7 +54,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideLunar",
 		name = "Lunar Teleports",
-		description = "Replace Lunar spellbook teleport animations"
+		description = "Replace Lunar spellbook teleport animations",
+		position = 4
 	)
 	default boolean overrideLunar()
 	{
@@ -60,7 +65,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideTabs",
 		name = "Teleport Tabs",
-		description = "Replace teleport tab animations"
+		description = "Replace teleport tab animations",
+		position = 5
 	)
 	default boolean overrideTabs()
 	{
@@ -70,25 +76,27 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideScrolls",
 		name = "Teleport Scrolls",
-		description = "Replace teleport scroll animations"
+		description = "Replace teleport scroll animations",
+		position = 6
 	)
 	default boolean overrideScrolls() {return true;}
 
 	@ConfigItem(
 		keyName = "muteTeleportSound",
 		name = "Mute Teleport Sound",
-		description = "Suppress the teleport sound when the plugin replaces the animation"
+		description = "Suppress the teleport sound when the plugin replaces the animation",
+		position = 7
 	)
 	default boolean muteTeleportSound()
 	{
 		return true;
 	}
 
-
 	@ConfigItem(
 		keyName = "overrideEctophial",
 		name = "Ectophial Teleports",
-		description = "Replace Ectophial teleport animations"
+		description = "Replace Ectophial teleport animations",
+		position = 8
 	)
 	default boolean overrideEctophial()
 	{
@@ -98,7 +106,8 @@ public interface ExampleConfig extends Config
 	@ConfigItem(
 		keyName = "overrideArdougne",
 		name = "Ardougne Cape Teleports",
-		description = "Replace Ardougne cape teleport animations"
+		description = "Replace Ardougne cape teleport animations",
+		position = 9
 	)
 	default boolean overrideArdougne()
 	{
