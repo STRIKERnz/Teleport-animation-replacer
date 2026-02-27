@@ -59,11 +59,38 @@ public interface ExampleConfig extends Config
 	}
 
 	@ConfigItem(
+		keyName = "overrideScrolls",
+		name = "Teleport Scrolls",
+		description = "Replace teleport scroll animations"
+	)
+	default boolean overrideScrolls() {return true;}
+
+	@ConfigItem(
 		keyName = "muteTeleportSound",
 		name = "Mute Teleport Sound",
 		description = "Suppress the teleport sound when the plugin replaces the animation"
 	)
 	default boolean muteTeleportSound()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "overrideAnimationType",
+		name = "Override With",
+		description = "Select which teleport animation to use when overriding teleports"
+	)
+	default TeleportAnimation teleportAnimation()
+	{
+		return TeleportAnimation.COWBELL;
+	}
+
+	@ConfigItem(
+		keyName = "overrideEctophial",
+		name = "Ectophial Teleports",
+		description = "Replace Ectophial teleport animations"
+	)
+	default boolean overrideEctophial()
 	{
 		return true;
 	}

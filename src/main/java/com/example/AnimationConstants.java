@@ -11,6 +11,11 @@ public final class AnimationConstants
 	public static final int ARCEUUS_TELEPORT = 3865;
 	public static final int LUNAR_TELEPORT = 1816;
 	public static final int TAB_TELEPORT = 4071;
+	public static final int TELEPORT_SCROLLS = 3864;
+	public static final int TELEPORT_SCROLLS_GRAPHIC = 111;
+	public static final int ECTOPHIAL_TELEPORT = 878;
+	public static final int ECTOPHIAL_TELEPORT_GRAPHIC = 1273;
+
 
 
 	private static final Set<Integer> ALL_TELEPORTS = Set.of(
@@ -18,7 +23,9 @@ public final class AnimationConstants
 			ANCIENT_TELEPORT,
 			ARCEUUS_TELEPORT,
 			LUNAR_TELEPORT,
-			TAB_TELEPORT
+			TAB_TELEPORT,
+			TELEPORT_SCROLLS,
+			ECTOPHIAL_TELEPORT
 	);
 
 	private AnimationConstants() {}
@@ -52,5 +59,9 @@ public final class AnimationConstants
 	{
 		return animationId == TAB_TELEPORT;
 	}
+
+	public static boolean isTeleportScroll(int animationId){ return animationId == TELEPORT_SCROLLS;}
+
+	public static boolean isEctophialTeleport(int animationId){ return animationId == ECTOPHIAL_TELEPORT;}
 
 }

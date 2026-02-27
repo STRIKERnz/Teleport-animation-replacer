@@ -62,6 +62,51 @@ public class ExamplePlugin extends Plugin
 		Player player = client.getLocalPlayer();
 		int animationId = player.getAnimation();
 
+		// Handle the special cowbell flow where we wait for animation -1 to set arrival
+		handleCowbellArrival(player, animationId);
+
+		// If selected override is NONE, do nothing
+		TeleportAnimation selected = config.teleportAnimation();
+		if (selected == TeleportAnimation.NONE)
+			return;
+
+		// If the player is already playing the selected animation, nothing to do
+		if (animationId == selected.getAnimationId())
+			return;
+
+		// Only react to known teleport animations
+		if (!AnimationConstants.isTeleportAnimation(animationId))
+			return;
+
+		// Respect granular config toggles as before
+		if (!shouldOverride(animationId))
+			return;
+
+		// For cowbell we need the previous behavior (some teleports require special handling)
+		if (selected == TeleportAnimation.COWBELL)
+		{
+			teleporting = true;
+
+			player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
+			player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
+			return;
+		}
+
+		// For other chosen animations, simply set the animation/graphic once.
+		player.setAnimation(selected.getAnimationId());
+		// If the chosen animation has associated graphics, set as needed
+		if (selected == TeleportAnimation.SCROLL)
+		{
+			player.setGraphic(AnimationConstants.TELEPORT_SCROLLS_GRAPHIC);
+		}
+		else if (selected == TeleportAnimation.ECTOPHIAL)
+		{
+			player.setGraphic(AnimationConstants.ECTOPHIAL_TELEPORT_GRAPHIC);
+		}
+	}
+
+	private void handleCowbellArrival(Player player, int animationId)
+	{
 		if (teleporting && animationId == -1)
 		{
 			teleporting = false;
@@ -70,22 +115,7 @@ public class ExamplePlugin extends Plugin
 			player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
 
 			arrivalSoundTicksRemaining = ARRIVAL_SOUND_DELAY_TICKS;
-			return;
 		}
-
-		if (animationId == AnimationConstants.COWBELL_TELEPORT)
-			return;
-
-		if (!AnimationConstants.isTeleportAnimation(animationId))
-			return;
-
-		if (!shouldOverride(animationId))
-			return;
-
-		teleporting = true;
-
-		player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
-		player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
 	}
 
 	@Subscribe
@@ -121,6 +151,12 @@ public class ExamplePlugin extends Plugin
 			return true;
 
 		if (AnimationConstants.isLunarTeleport(animationId) && config.overrideLunar())
+			return true;
+
+		if (AnimationConstants.isTeleportScroll(animationId) && config.overrideScrolls())
+			return true;
+
+		if (AnimationConstants.isEctophialTeleport(animationId) && config.overrideEctophial())
 			return true;
 
 		return AnimationConstants.isTabTeleport(animationId) && config.overrideTabs();
