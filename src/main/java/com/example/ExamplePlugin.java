@@ -37,6 +37,31 @@ public class ExamplePlugin extends Plugin
 			965
 	);
 
+	// All sounds that the plugin may play for overrides (useful to avoid double-ups and to mute originals)
+	private static final Set<Integer> OVERRIDE_SOUND_IDS;
+
+	static
+	{
+		java.util.Set<Integer> tmp = new java.util.HashSet<>();
+		// Add values; duplicates are tolerated by HashSet
+		tmp.add(AnimationConstants.COWBELL_ARRIVAL_SOUND);
+		tmp.add(AnimationConstants.STANDARD_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.ANCIENT_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.ARCEUUS_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.LUNAR_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.TAB_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.TELEPORT_SCROLLS_SOUND);
+		tmp.add(AnimationConstants.ECTOPHIAL_TELEPORT_SOUND);
+		OVERRIDE_SOUND_IDS = java.util.Collections.unmodifiableSet(tmp);
+	}
+
+	// Track last played sound to avoid playing the same sound multiple times in the same tick
+	private int lastPlayedSoundId = -1;
+	private int lastPlayedSoundTick = -1;
+
+	// Map: originalSoundId -> expireTick (inclusive). We remove expired entries each tick.
+	private final java.util.Map<Integer, Integer> mutedSoundUntilTick = new java.util.HashMap<>();
+
 	@Override
 	protected void startUp()
 	{
@@ -82,10 +107,19 @@ public class ExamplePlugin extends Plugin
 		if (!shouldOverride(animationId))
 			return;
 
+		// Figure out the original sound for this teleport so we can mute it if needed
+		int originalSound = getOriginalSoundForTeleport(animationId);
+
 		// For cowbell we need the previous behavior (some teleports require special handling)
 		if (selected == TeleportAnimation.COWBELL)
 		{
 			teleporting = true;
+
+			// If muting is enabled, mark the original sound to be muted for the next tick
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
 
 			player.setAnimation(AnimationConstants.COWBELL_TELEPORT);
 			player.setGraphic(AnimationConstants.COWBELL_TELEPORT_GRAPHIC);
@@ -94,15 +128,148 @@ public class ExamplePlugin extends Plugin
 
 		// For other chosen animations, simply set the animation/graphic once.
 		player.setAnimation(selected.getAnimationId());
-		// If the chosen animation has associated graphics, set as needed
+
+		// If the chosen animation has associated graphics, set as needed and mark original sound to mute
 		if (selected == TeleportAnimation.SCROLL)
 		{
-			player.setGraphic(AnimationConstants.TELEPORT_SCROLLS_GRAPHIC);
+			if (AnimationConstants.TELEPORT_SCROLLS_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.TELEPORT_SCROLLS_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.TELEPORT_SCROLLS_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.TELEPORT_SCROLLS_SOUND);
+			}
 		}
 		else if (selected == TeleportAnimation.ECTOPHIAL)
 		{
-			player.setGraphic(AnimationConstants.ECTOPHIAL_TELEPORT_GRAPHIC);
+			if (AnimationConstants.ECTOPHIAL_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.ECTOPHIAL_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.ECTOPHIAL_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.ECTOPHIAL_TELEPORT_SOUND);
+			}
 		}
+		else if (selected == TeleportAnimation.STANDARD)
+		{
+			if (AnimationConstants.STANDARD_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.STANDARD_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.STANDARD_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.STANDARD_TELEPORT_SOUND);
+			}
+		}
+		else if (selected == TeleportAnimation.ANCIENT)
+		{
+			if (AnimationConstants.ANCIENT_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.ANCIENT_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.ANCIENT_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.ANCIENT_TELEPORT_SOUND);
+			}
+		}
+		else if (selected == TeleportAnimation.ARCEUUS)
+		{
+			if (AnimationConstants.ARCEUUS_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.ARCEUUS_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.ARCEUUS_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.ARCEUUS_TELEPORT_SOUND);
+			}
+		}
+		else if (selected == TeleportAnimation.LUNAR)
+		{
+			if (AnimationConstants.LUNAR_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.LUNAR_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.LUNAR_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.LUNAR_TELEPORT_SOUND);
+			}
+		}
+		else if (selected == TeleportAnimation.TAB)
+		{
+			if (AnimationConstants.TAB_TELEPORT_GRAPHIC != -1)
+			{
+				player.setGraphic(AnimationConstants.TAB_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound())
+			{
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.TAB_TELEPORT_SOUND != -1)
+			{
+				playSoundOnce(AnimationConstants.TAB_TELEPORT_SOUND);
+			}
+		}
+	}
+
+	private void playSoundOnce(int soundId)
+	{
+		if (soundId == -1)
+			return;
+
+		int tick = client.getTickCount();
+		if (soundId == lastPlayedSoundId && tick == lastPlayedSoundTick)
+			return;
+
+		// Record before playing so synchronous SoundEffectPlayed events aren't consumed
+		lastPlayedSoundId = soundId;
+		lastPlayedSoundTick = tick;
+
+		client.playSoundEffect(soundId);
+	}
+
+	private int getOriginalSoundForTeleport(int animationId)
+	{
+		if (AnimationConstants.isModernTeleport(animationId))
+			return AnimationConstants.STANDARD_TELEPORT_SOUND;
+		if (AnimationConstants.isAncientTeleport(animationId))
+			return AnimationConstants.ANCIENT_TELEPORT_SOUND;
+		if (AnimationConstants.isArceuusTeleport(animationId))
+			return AnimationConstants.ARCEUUS_TELEPORT_SOUND;
+		if (AnimationConstants.isLunarTeleport(animationId))
+			return AnimationConstants.LUNAR_TELEPORT_SOUND;
+		if (AnimationConstants.isTabTeleport(animationId))
+			return AnimationConstants.TAB_TELEPORT_SOUND;
+		if (AnimationConstants.isTeleportScroll(animationId))
+			return AnimationConstants.TELEPORT_SCROLLS_SOUND;
+		if (AnimationConstants.isEctophialTeleport(animationId))
+			return AnimationConstants.ECTOPHIAL_TELEPORT_SOUND;
+		return -1;
 	}
 
 	private void handleCowbellArrival(Player player, int animationId)
@@ -125,11 +292,19 @@ public class ExamplePlugin extends Plugin
 		if (player == null)
 			return;
 
+		// expire muted sound entries older than current tick
+		int tick = client.getTickCount();
+		mutedSoundUntilTick.values().removeIf(expire -> expire < tick);
+
 		if (arrivalSoundTicksRemaining >= 0)
 		{
 			if (arrivalSoundTicksRemaining == 0)
 			{
-				client.playSoundEffect(11286);
+				// always play the cowbell arrival sound for the override regardless of mute setting
+				if (AnimationConstants.COWBELL_ARRIVAL_SOUND != -1)
+				{
+					playSoundOnce(AnimationConstants.COWBELL_ARRIVAL_SOUND);
+				}
 				arrivalSoundTicksRemaining = -1;
 			}
 			else
@@ -171,7 +346,14 @@ public class ExamplePlugin extends Plugin
 		if (event.getSource() != client.getLocalPlayer())
 			return;
 
-		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
+		int soundId = event.getSoundId();
+		int tick = client.getTickCount();
+
+		// If this is the same sound the plugin just played this tick, don't consume it
+		if (soundId == lastPlayedSoundId && tick == lastPlayedSoundTick)
+			return;
+
+		if (mutedSoundUntilTick.containsKey(soundId) && mutedSoundUntilTick.get(soundId) >= tick)
 		{
 			event.consume();
 		}
@@ -183,7 +365,14 @@ public class ExamplePlugin extends Plugin
 		if (!config.muteTeleportSound())
 			return;
 
-		if (TELEPORT_SOUND_IDS.contains(event.getSoundId()))
+		int soundId = event.getSoundId();
+		int tick = client.getTickCount();
+
+		// If this is the same sound the plugin just played this tick, don't consume it
+		if (soundId == lastPlayedSoundId && tick == lastPlayedSoundTick)
+			return;
+
+		if (mutedSoundUntilTick.containsKey(soundId) && mutedSoundUntilTick.get(soundId) >= tick)
 		{
 			event.consume();
 		}

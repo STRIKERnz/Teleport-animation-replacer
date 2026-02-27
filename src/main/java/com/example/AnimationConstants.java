@@ -6,15 +6,28 @@ public final class AnimationConstants
 {
 	public static final int COWBELL_TELEPORT = 13811;
 	public static final int COWBELL_TELEPORT_GRAPHIC = 3603;
+	public static final int COWBELL_ARRIVAL_SOUND = 11286; // existing cowbell arrival sound id
 	public static final int STANDARD_AND_JEWELLERY_TELEPORT = 714;
+	public static final int STANDARD_TELEPORT_GRAPHIC = 111;
+	public static final int STANDARD_TELEPORT_SOUND = 200;
 	public static final int ANCIENT_TELEPORT = 1979;
+	public static final int ANCIENT_TELEPORT_GRAPHIC = 392;
+	public static final int ANCIENT_TELEPORT_SOUND = 197;
 	public static final int ARCEUUS_TELEPORT = 3865;
+	public static final int ARCEUUS_TELEPORT_GRAPHIC = 1296;
+	public static final int ARCEUUS_TELEPORT_SOUND = 200;
 	public static final int LUNAR_TELEPORT = 1816;
+	public static final int LUNAR_TELEPORT_GRAPHIC = 747;
+	public static final int LUNAR_TELEPORT_SOUND = 200;
 	public static final int TAB_TELEPORT = 4071;
+	public static final int TAB_TELEPORT_GRAPHIC = 678;
+	public static final int TAB_TELEPORT_SOUND = 965;
 	public static final int TELEPORT_SCROLLS = 3864;
 	public static final int TELEPORT_SCROLLS_GRAPHIC = 111;
+	public static final int TELEPORT_SCROLLS_SOUND = 200;
 	public static final int ECTOPHIAL_TELEPORT = 878;
 	public static final int ECTOPHIAL_TELEPORT_GRAPHIC = 1273;
+	public static final int ECTOPHIAL_TELEPORT_SOUND = 2401;
 
 
 
