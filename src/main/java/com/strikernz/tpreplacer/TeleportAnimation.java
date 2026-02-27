@@ -1,4 +1,4 @@
-package com.example;
+package com.strikernz.tpreplacer;
 
 public enum TeleportAnimation
 {

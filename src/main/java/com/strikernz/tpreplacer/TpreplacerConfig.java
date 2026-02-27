@@ -1,11 +1,11 @@
-package com.example;
+package com.strikernz.tpreplacer;
 
 import net.runelite.client.config.Config;
 import net.runelite.client.config.ConfigGroup;
 import net.runelite.client.config.ConfigItem;
 
 @ConfigGroup("cowbell")
-public interface ExampleConfig extends Config
+public interface TpreplacerConfig extends Config
 {
 	@ConfigItem(
 		keyName = "overrideAnimationType",

@@ -1,4 +1,4 @@
-package com.example;
+package com.strikernz.tpreplacer;
 
 import java.util.Set;
 
@@ -36,7 +36,6 @@ public final class AnimationConstants
 	public static final int ECTOPHIAL_TELEPORT_GRAPHIC = 1273;
 	public static final int ECTOPHIAL_TELEPORT_SOUND = 2401;
 
-	// Ardougne cape teleport (animation/graphic/sound provided)
 	public static final int ARDOUGNE_TELEPORT = 3872;
 	public static final int ARDOUGNE_TELEPORT_GRAPHIC = 1237;
 	public static final int ARDOUGNE_TELEPORT_SOUND = 200;

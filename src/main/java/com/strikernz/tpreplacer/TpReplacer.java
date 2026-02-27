@@ -1,4 +1,4 @@
-package com.example;
+package com.strikernz.tpreplacer;
 
 import com.google.inject.Provides;
 import javax.inject.Inject;
@@ -21,13 +21,13 @@ import java.util.Set;
 		description = "Replace teleport animations with the cowbell amulet teleport animation",
 		tags = {"animation", "teleport"}
 )
-public class ExamplePlugin extends Plugin
+public class TpReplacer extends Plugin
 {
 	@Inject
 	private Client client;
 
 	@Inject
-	private ExampleConfig config;
+	private TpreplacerConfig config;
 
 	private boolean teleporting = false;
 
@@ -400,8 +400,8 @@ public class ExamplePlugin extends Plugin
 	}
 
 	@Provides
-	ExampleConfig provideConfig(ConfigManager configManager)
+	TpreplacerConfig provideConfig(ConfigManager configManager)
 	{
-		return configManager.getConfig(ExampleConfig.class);
+		return configManager.getConfig(TpreplacerConfig.class);
 	}
 }
