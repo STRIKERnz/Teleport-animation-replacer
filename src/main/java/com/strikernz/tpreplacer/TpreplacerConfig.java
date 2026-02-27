@@ -105,11 +105,22 @@ public interface TpreplacerConfig extends Config
 
 	@ConfigItem(
 		keyName = "overrideArdougne",
-		name = "Ardougne Cape Teleports",
+		name = "Ardougne Cape Teleport",
 		description = "Replace Ardougne cape teleport animations",
 		position = 9
 	)
 	default boolean overrideArdougne()
+	{
+		return true;
+	}
+
+	@ConfigItem(
+		keyName = "overrideDesertAmulet",
+		name = "Desert Amulet Teleports",
+		description = "Replace Desert Amulet teleport animations",
+		position = 10
+	)
+	default boolean overrideDesertAmulet()
 	{
 		return true;
 	}

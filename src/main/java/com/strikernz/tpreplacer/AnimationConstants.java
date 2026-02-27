@@ -40,6 +40,10 @@ public final class AnimationConstants
 	public static final int ARDOUGNE_TELEPORT_GRAPHIC = 1237;
 	public static final int ARDOUGNE_TELEPORT_SOUND = 200;
 
+	public static final int DESERT_AMULET_TELEPORT = 9606;
+	public static final int DESERT_AMULET_TELEPORT_GRAPHIC = 1684;
+	public static final int DESERT_AMULET_TELEPORT_SOUND = 200;
+
 
 
 	private static final Set<Integer> ALL_TELEPORTS = Set.of(
@@ -50,7 +54,8 @@ public final class AnimationConstants
 			TAB_TELEPORT,
 			TELEPORT_SCROLLS,
 			ECTOPHIAL_TELEPORT,
-			ARDOUGNE_TELEPORT
+			ARDOUGNE_TELEPORT,
+			DESERT_AMULET_TELEPORT
 	);
 
 	private AnimationConstants() {}
@@ -91,4 +96,7 @@ public final class AnimationConstants
 
 	public static boolean isArdougneTeleport(int animationId){ return animationId == ARDOUGNE_TELEPORT;}
 
+	public static boolean isDesertAmuletTeleport(int animationId){ return animationId == DESERT_AMULET_TELEPORT;}
+
 }
+

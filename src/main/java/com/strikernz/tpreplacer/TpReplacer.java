@@ -17,7 +17,7 @@ import net.runelite.client.plugins.PluginDescriptor;
 import java.util.Set;
 
 @PluginDescriptor(
-		name = "Cowbell Teleport",
+		name = "Teleport animation replacer",
 		description = "Replace teleport animations with the cowbell amulet teleport animation",
 		tags = {"animation", "teleport"}
 )
@@ -53,6 +53,7 @@ public class TpReplacer extends Plugin
 		tmp.add(AnimationConstants.TELEPORT_SCROLLS_SOUND);
 		tmp.add(AnimationConstants.ECTOPHIAL_TELEPORT_SOUND);
 		tmp.add(AnimationConstants.ARDOUGNE_TELEPORT_SOUND);
+		tmp.add(AnimationConstants.DESERT_AMULET_TELEPORT_SOUND);
 		OVERRIDE_SOUND_IDS = java.util.Collections.unmodifiableSet(tmp);
 	}
 
@@ -251,6 +252,17 @@ public class TpReplacer extends Plugin
 				playSoundOnce(AnimationConstants.ARDOUGNE_TELEPORT_SOUND);
 			}
 		}
+		else if (selected == TeleportAnimation.DESERT_AMULET) {
+			if (AnimationConstants.DESERT_AMULET_TELEPORT_GRAPHIC != -1) {
+				player.setGraphic(AnimationConstants.DESERT_AMULET_TELEPORT_GRAPHIC);
+			}
+			if (originalSound != -1 && config.muteTeleportSound()) {
+				mutedSoundUntilTick.put(originalSound, client.getTickCount() + 1);
+			}
+			if (AnimationConstants.DESERT_AMULET_TELEPORT_SOUND != -1) {
+				playSoundOnce(AnimationConstants.DESERT_AMULET_TELEPORT_SOUND);
+			}
+		}
 	}
 
 	private void playSoundOnce(int soundId)
@@ -287,6 +299,8 @@ public class TpReplacer extends Plugin
 			return AnimationConstants.ECTOPHIAL_TELEPORT_SOUND;
 		if (AnimationConstants.isArdougneTeleport(animationId))
 			return AnimationConstants.ARDOUGNE_TELEPORT_SOUND;
+		if (AnimationConstants.isDesertAmuletTeleport(animationId))
+			return AnimationConstants.DESERT_AMULET_TELEPORT_SOUND;
 		return -1;
 	}
 
@@ -353,6 +367,9 @@ public class TpReplacer extends Plugin
 			return true;
 
 		if (AnimationConstants.isArdougneTeleport(animationId) && config.overrideArdougne())
+			return true;
+
+		if (AnimationConstants.isDesertAmuletTeleport(animationId) && config.overrideDesertAmulet())
 			return true;
 
 		return AnimationConstants.isTabTeleport(animationId) && config.overrideTabs();

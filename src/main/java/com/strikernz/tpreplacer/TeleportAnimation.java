@@ -11,7 +11,8 @@ public enum TeleportAnimation
 	TAB(AnimationConstants.TAB_TELEPORT, "Tab"),
 	SCROLL(AnimationConstants.TELEPORT_SCROLLS, "Scroll"),
 	ECTOPHIAL(AnimationConstants.ECTOPHIAL_TELEPORT, "Ectophial"),
-	ARDOUGNE(AnimationConstants.ARDOUGNE_TELEPORT, "Ardougne Cape");
+	ARDOUGNE(AnimationConstants.ARDOUGNE_TELEPORT, "Ardougne Cape"),
+	DESERT_AMULET(AnimationConstants.DESERT_AMULET_TELEPORT, "Desert Amulet");
 
 	private final int animationId;
 	private final String name;
