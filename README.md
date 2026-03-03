@@ -16,7 +16,7 @@ A RuneLite plugin that replaces many teleport animations with an alternative ani
 - Option to mute the original teleport sound when an override occurs (prevents double sounds).
 
 ## Default behavior
-- By default the plugin is enabled and set to replace teleports with the Cowbell Amulet animation. Most granular toggles are enabled by default; mute is enabled by default.
+- By default the plugin is enabled and set to replace teleports with the Cowbell Amulet animation. mute is enabled by default.
 
 ## Configuration
 Open the plugin settings in RuneLite and configure:
