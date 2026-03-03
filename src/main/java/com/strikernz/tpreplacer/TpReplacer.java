@@ -16,9 +16,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @PluginDescriptor(
-		name = "Teleport animation replacer",
-		description = "Replace teleport animations with the cowbell amulet teleport animation",
-		tags = {"animation", "teleport"}
+		name = "Teleport Animation Replacer",
+		description = "Replace teleport animations with Different teleport animations graphics and sounds",
+		tags = {"animation", "teleport", "sound", "graphic",  "customization"}
 )
 public class TpReplacer extends Plugin
 {
