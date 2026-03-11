@@ -20,7 +20,7 @@ By default the plugin replaces all teleports with the Cowbell Amulet animation.
 
 ## Configuration
 Open the plugin settings in RuneLite and configure:
-- **Override All** — the global animation applied to all teleports (Cowbell Amulet, Standard/Jewellery, Ancient, Arceuus, Lunar, Tab, Scroll, Ectophial, Ardougne Cape, Desert Amulet)
+- **Override All** — the global animation applied to all teleports.
 - **Per Teleport** section — set a specific animation per teleport type; "None (Use Global)" falls back to the global setting
 
 ## Notes
